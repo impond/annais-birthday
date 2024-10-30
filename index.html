@@ -7,11 +7,44 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1 id="message-title">A Special Message for You</h1>
-        <p id="message-content">Loading your message...</p>
-        <button id="next-message" onclick="showMessage()">Show Today's Message</button>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="box">
+            <div class="lid"></div>
+            <div class="box-content">Annais Appreciation Box</div>
+        </div>
     </div>
+
+    <!-- Special Message for October 29th (testing) -->
+    <div class="container" id="first-message-container" style="display: none;">
+        <h1 id="special-title">A Special Gift for You</h1>
+        <p id="special-message">
+            Today marks the beginning of a special journey. Over the next year, I’ll be sharing with you 
+            30 messages, in 30 different formats, each reflecting something I deeply love and appreciate about you. 
+            This is a celebration of all the wonderful things that make you, *you*.
+        </p>
+        <button onclick="goToMessages()">See First Message</button>
+    </div>
+
+    <!-- Main Messages Page -->
+    <div class="container" id="messages-container" style="display: none;">
+        <div id="media-content">
+            <!-- Associated image for first message -->
+            <img id="media-image" src="https://plus.unsplash.com/premium_photo-1678914346628-8f38ba948356?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Special Image">
+        </div>
+        <p id="message-content">Loading today's message...</p>
+        <button onclick="showPreviousMessages()">Show Previous Messages</button>
+    </div>
+
+    <!-- Previous Messages Overlay -->
+    <div id="previous-messages-overlay" class="overlay" style="display: none;">
+        <div class="overlay-content">
+            <h2>Previous Messages</h2>
+            <button class="close-btn" onclick="closePreviousMessages()">Close</button>
+            <ul id="message-list"></ul>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
