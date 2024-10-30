@@ -1,106 +1,128 @@
-// Array of messages (replace these with your actual messages)
-const messages = [
-    { date: '2024-10-30', message: 'Bringing amazing people together', format: 'Stream of Consciousness Video' },
-    { date: '2024-11-11', message: 'Your curiosity', format: 'Haiku' },
-    // Add all your messages here...
-    { date: '2025-10-10', message: 'Your playfulness', format: 'Dance Video' }
-];
+$(document).ready(function() {
+    // Define the special date for Annais' birthday and message interval in days
+    const specialDate = new Date(2024, 9, 29); // October 29, 2024 (0-based month index)
+    const intervalDays = 12;
 
-// On October 26th (for testing), show the special message page
-function goToMessages() {
-    document.getElementById('first-message-container').style.display = 'none';
-    document.getElementById('messages-container').style.display = 'block';
-    showMessage();
-}
+    // Array of appreciation messages
+    const messages = [
+        { title: "Bringing amazing people together", format: "Stream of Consciousness Video", body: "You have a unique gift for creating connections between people who share values and dreams. I admire how you effortlessly build bonds that last." },
+        { title: "Your curiosity", format: "Haiku", body: "Your endless curiosity inspires me every day. The way you dive into new subjects and seek to understand the world around you is truly remarkable." },
+        { title: "Your playfulness", format: "Dance Video", body: "Your playful spirit brings joy and lightness to our lives. It's one of the things I love most about you—how you can turn even the smallest moments into laughter." },
+        // Add more messages here as needed...
+    ];
 
-// Function to display the current message
-function showMessage() {
-    const index = getCurrentMessageIndex();
-    console.log("Calculated Index:", index); // Log the index for debugging
+    // Terminal initialization
+    const term = $('#terminal').terminal(function(command) {
+        const cmd = command.trim().toLowerCase();
 
-    if (index < 0 || index >= messages.length) {
-        console.error("Invalid index:", index);
-        document.getElementById('message-content').textContent = "No message available.";
-        return;
-    }
-
-    const message = messages[index];
-    if (!message) {
-        console.error("Message not found for index:", index);
-        document.getElementById('message-content').textContent = "No message available.";
-        return;
-    }
-
-    // Update the message content
-    const messageElement = document.getElementById('message-content');
-    messageElement.textContent = `${message.message} - Format: ${message.format}`;
-}
-
-// Calculate the index based on the current date
-function getCurrentMessageIndex() {
-    const startDate = new Date(messages[0].date);
-    const today = new Date();
-
-    // Ensure that today is not before the start date
-    if (today < startDate) {
-        console.warn("Today's date is before the start date.");
-        return 0; // Default to first message
-    }
-
-    const diffInDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-    console.log("Difference in Days:", diffInDays); // Debugging log
-
-    // Calculate the index based on 12-day intervals
-    let index = Math.floor(diffInDays / 12);
-
-    // Wrap around using modulo and validate index
-    index = index % messages.length;
-    return index;
-}
-
-// Show the full-screen overlay with previous messages
-function showPreviousMessages() {
-    const previousMessagesOverlay = document.getElementById('previous-messages-overlay');
-    const messageList = document.getElementById('message-list');
-    messageList.innerHTML = ''; // Clear existing messages
-
-    // Loop through all messages before the current index and add to the list
-    const currentIndex = getCurrentMessageIndex();
-    for (let i = 0; i < currentIndex; i++) {
-        const messageItem = document.createElement('li');
-        messageItem.textContent = `${messages[i].message} - ${messages[i].format}`;
-        messageItem.onclick = () => {
-            document.getElementById('message-content').textContent = `${messages[i].message} - Format: ${messages[i].format}`;
-            closePreviousMessages(); // Close the overlay on selecting a message
-        };
-        messageList.appendChild(messageItem);
-    }
-
-    // Show the overlay with a smooth transition
-    previousMessagesOverlay.classList.add('show');
-}
-
-// Close the previous messages overlay
-function closePreviousMessages() {
-    const previousMessagesOverlay = document.getElementById('previous-messages-overlay');
-    previousMessagesOverlay.classList.remove('show');
-}
-
-// On page load, check if today is October 29th (for testing)
-window.onload = () => {
-    // Simulate loading time for the loader effect
-    setTimeout(() => {
-        document.getElementById('loading-screen').style.display = 'none';
-        const today = new Date();
-        const isSpecialDay = today.toISOString().slice(0, 10) === "2024-10-29"; // Switch date to October 29th for testing
-
-        if (isSpecialDay) {
-            document.getElementById('first-message-container').style.display = 'block';
-            document.getElementById('messages-container').style.display = 'none';
+        if (cmd === 'help') {
+            this.echo("Available commands:");
+            this.echo(" - help: Show available commands");
+            this.echo(" - clear: Clear the terminal window");
+            this.echo(" - hello: Display a greeting message");
+            this.echo(" - current: Show the latest appreciation message");
+            this.echo(" - showprevious: Show all available messages until today");
+            this.echo(" - goto [message title]: Load a previous message by its title");
+        } else if (cmd === 'hello') {
+            this.echo("Hello, my love! I hope your appreciation box brings you joy.");
+        } else if (cmd === 'clear') {
+            this.clear();
+        } else if (cmd === 'current') {
+            showCurrentMessage(this);
+        } else if (cmd === 'showprevious') {
+            showPreviousMessages(this);
+        } else if (cmd.startsWith('goto ')) {
+            const title = command.slice(5).trim();
+            gotoMessage(this, title);
+        } else if (isSpecialDay()) {
+            displaySpecialMessage(this);
         } else {
-            document.getElementById('first-message-container').style.display = 'none';
-            document.getElementById('messages-container').style.display = 'block';
-            showMessage();
+            this.echo(`Unknown command: ${command}`);
         }
-    }, 3000); // Duration of the loading screen (3 seconds for effect)
-};
+    }, {
+        greetings: getGreetingMessage(),
+        prompt: '> ',
+    });
+
+    // Function to check if today is the special day
+    function isSpecialDay() {
+        const today = new Date();
+        return today.getFullYear() === specialDate.getFullYear() &&
+               today.getMonth() === specialDate.getMonth() &&
+               today.getDate() === specialDate.getDate();
+    }
+
+    // Function to display the special birthday message
+    function displaySpecialMessage(terminal) {
+        terminal.echo("Today marks a special milestone, Annais!");
+        terminal.echo("Over the next year, you'll receive 30 messages,");
+        terminal.echo("each one reflecting a different thing I love about you.");
+        terminal.echo("These 30 messages are a celebration of your 30th birthday and all that makes you special.");
+        terminal.echo("\nType 'help' to see more commands.");
+    }
+
+    // ASCII Art for the welcome greeting
+    function getGreetingMessage() {
+        return `
+     _                      _     _      _                              _       _   _               ____            
+    / \\   _ __  _ __   __ _(_)___( )    / \\   _ __  _ __  _ __ ___  ___(_) __ _| |_(_) ___  _ __   | __ )  _____  __
+   / _ \\ | '_ \\| '_ \\ / _\` | / __|/    / _ \\ | '_ \\| '_ \\| '__/ _ \\/ __| |/ _\` | __| |/ _ \\| '_ \\  |  _ \\ / _ \\ \\/ /
+  / ___ \\| | | | | | | (_| | \\__ \\    / ___ \\| |_) | |_) | | |  __/ (__| | (_| | |_| | (_) | | | | | |_) | (_) >  < 
+ /_/   \\_\\_| |_|_| |_|\\__,_|_|___/   /_/   \\_\\ .__/| .__/|_|  \\___|\\___|_|\\__,_|\\__|_|\\___/|_| |_| |____/ \\___/_/\\_\\
+                                             |_|   |_|                                                              
+        `;
+    }
+
+    // Function to calculate the latest message index based on the interval
+    function getLatestMessageIndex() {
+        const today = new Date();
+        const diffInDays = Math.floor((today - specialDate) / (1000 * 60 * 60 * 24));
+        return Math.floor(diffInDays / intervalDays);
+    }
+
+    // Function to show the latest message
+    function showCurrentMessage(terminal) {
+        const index = getLatestMessageIndex();
+        if (index < 0 || index >= messages.length) {
+            terminal.echo("No messages available yet.");
+            return;
+        }
+
+        const message = messages[index];
+        terminal.echo(`Title: ${message.title}`);
+        terminal.echo(`Format: ${message.format}`);
+        terminal.echo(`\n${message.body}`);
+    }
+
+    // Function to show all previous messages up to today
+    function showPreviousMessages(terminal) {
+        const latestIndex = getLatestMessageIndex();
+        if (latestIndex < 0) {
+            terminal.echo("No previous messages available yet.");
+            return;
+        }
+
+        terminal.echo("Available messages:");
+        for (let i = 0; i <= latestIndex && i < messages.length; i++) {
+            terminal.echo(`- ${messages[i].title}`);
+        }
+    }
+
+    // Function to go to a specific message by title
+    function gotoMessage(terminal, title) {
+        const message = messages.find(msg => msg.title.toLowerCase() === title.toLowerCase());
+        if (!message) {
+            terminal.error("Message not found.");
+            return;
+        }
+
+        terminal.echo(`Title: ${message.title}`);
+        terminal.echo(`Format: ${message.format}`);
+        terminal.echo(`\n${message.body}`);
+    }
+
+    // Initial special message check
+    if (isSpecialDay()) {
+        term.echo("Today is a special day, Annais. Type any command to get started.");
+    }
+});
