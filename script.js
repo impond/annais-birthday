@@ -181,7 +181,7 @@ $(document).ready(function() {
         }
 
         const message = messages[index];
-        terminal.echo(`Todays' Title: I love your... ${message.title}`, { typing: false, delay: 50 });
+        terminal.echo(`Todays' Title (I love...):  ${message.title}`, { typing: false, delay: 50 });
         terminal.echo(`Todays' Format: ${message.format}`, { typing: false, delay: 50 });
         terminal.echo(`\n${message.body}`, { typing: false, delay: 50 });
 
