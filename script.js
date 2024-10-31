@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // Define the special date for Annai's birthday and message interval in days
-    const specialDate = new Date(2024, 9, 30); // October 30, 2024 (0-based month index)
+    const specialDate = new Date(2024, 9, 31); // October 30, 2024 (0-based month index)
     const intervalDays = 12;
 
     // Array of appreciation messages with media
