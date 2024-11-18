@@ -14,7 +14,7 @@ $(document).ready(function() {
         {
             title: "Your curiosity",
             format: "Haiku",
-            body: "Your endless curiosity inspires me every day. The way you dive into new subjects and seek to understand the world around you is truly remarkable.",
+            body: "Your endless curiosity\nInspires me every day.\nSeeking, you flourish.",
             media: null // No media for this message
         },
         {
@@ -31,7 +31,7 @@ $(document).ready(function() {
         const cmd = command.trim().toLowerCase();
 
         if (cmd === 'help') {
-            this.echo("Available commands:", { typing: true, delay: 50 });
+            this.echo("Available commands:", { typing: false, delay: 0 });
             this.echo(" - help: Show available commands", { typing: true, delay: 50 });
             this.echo(" - clear: Clear the terminal window", { typing: true, delay: 50 });
             this.echo(" - hello: Display a greeting message", { typing: true, delay: 50 });
