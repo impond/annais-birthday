@@ -14,7 +14,7 @@ $(document).ready(function() {
         {
             title: "Your curiosity",
             format: "Haiku",
-            body: "Your endless curiosity\nInspires me every day.\nSeeking, you flourish.",
+            body: "Striving endlessly\n Curious inspiration\n Hay, distributed.\n\n@      @   \n   @      @\n      @    \n  @      @ \n     @     ",
             media: null // No media for this message
         },
         {
@@ -216,7 +216,7 @@ $(document).ready(function() {
             return;
         }
 
-        terminal.echo("Available messages:", { typing: true, delay: 50 });
+        terminal.echo("Available messages:", { typing: false, delay: 0 });
         for (let i = 0; i <= latestIndex && i < messages.length; i++) {
             terminal.echo(`- ${messages[i].title}`, { typing: true, delay: 50 });
         }
